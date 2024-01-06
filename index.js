@@ -14,6 +14,17 @@ const Action = require("./libs/action");
 	let askedItems = "";
 
 	const action = new Action();
+
+	// Check User Login
+	logger("Checking User Login...");
+	let checkUserLogin = await action.checkAccountInfo();
+	if (checkUserLogin?.userName) {
+		logger(`User Login: ${checkUserLogin.userName}`);
+	} else {
+		logger("User Not Login");
+		process.exit();
+	}
+
 	action.sessionID = await action.getSession();
 
 	while (true) {
@@ -109,7 +120,9 @@ const Action = require("./libs/action");
 				logger("New Item Requested");
 				askedItems = item;
 				logger("Pin Item..." + item.name.slice(0, 20));
-				let pinNewItem = await action.pinItem(JSON.stringify(item));
+				let pinNewItem = await action.pinItem(
+					JSON.stringify({ item: JSON.stringify(item) })
+				);
 				logger(pinNewItem.err_msg);
 			}
 			await action.getSales();
