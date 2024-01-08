@@ -127,6 +127,29 @@ const Action = require("./libs/action");
 			}
 			await action.getSales();
 			await randomSleep(60000, 100000);
+			let timers = [10, 30, 60, 120];
+			let auctionTitles = [
+				"Lelang bun",
+				"Lelang Yuk Say",
+				"Cepet Cepetan Say",
+				"Cepet Cepetan Dapat harga murah",
+				"Lelang Yuk Bun",
+			];
+			let data = {
+				title: auctionTitles[Math.floor(Math.random() * auctionTitles.length)],
+				rule: 1,
+				participation: 0,
+				timer: timers[Math.floor(Math.random() * timers.length)],
+				price: Math.floor(Math.random() * 10000 + 10000).toString(),
+			};
+			logger("Create Auction...");
+			console.log(data);
+			let auction = await action.doAuction(data);
+
+			logger(auction.err_msg);
+			logger(`Auction ID: ${auction.data.auction_id}`);
+			logger("Waiting Auction End...");
+			await randomSleep(60000, 100000);
 		} catch (error) {
 			logger(error);
 		}
